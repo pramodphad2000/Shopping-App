@@ -175,9 +175,10 @@ class _CreateState extends State<Create> {
             child: OutlineButtonWidget(
               onPressed: () {
                 if (formKey.currentState!.validate()) {
+                    context.push(Routes.otpScreen);
                   final phoneNumberText = phoneNumberController.text.trim();
                   if (phoneNumberText.isNotEmpty) {
-                    // You can integrate the OTP sending logic here
+                   
                   }
                 }
               },

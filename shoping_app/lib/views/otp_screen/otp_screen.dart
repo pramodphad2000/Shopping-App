@@ -22,7 +22,7 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  final formkey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController phoneNumber = TextEditingController(text: "");
 
@@ -32,24 +32,27 @@ class _OtpScreenState extends State<OtpScreen> {
       child: Scaffold(
         body: Padding(
           padding: EdgeInsets.all(15.h),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _shoppingWidget(),
-                      SizedBox(height: 50.h),
-                      _loginWidget(),
-                      _textWidget(),
-                      SizedBox(height: 50.h),
-                      _bottomWidget(),
-                    ],
+          child: Form(
+            key: formKey, // Added Form widget
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _shoppingWidget(),
+                        SizedBox(height: 50.h),
+                        _loginWidget(),
+                        _textWidget(),
+                        SizedBox(height: 50.h),
+                        _bottomWidget(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -100,6 +103,14 @@ class _OtpScreenState extends State<OtpScreen> {
             closeKeyboardWhenCompleted: true,
             keyboardType: TextInputType.number,
             controller: _otpController,
+            validator: (value) { // Added validator
+              if (value == null || value.isEmpty) {
+                return 'Please enter the OTP';
+              } else if (value.length != 6) {
+                return 'OTP must be 6 digits';
+              }
+              return null;
+            },
             focusedPinTheme: PinTheme(
                 height: AppSizes.height(45),
                 width: AppSizes.width(32),
@@ -141,19 +152,10 @@ class _OtpScreenState extends State<OtpScreen> {
         width: 120.w,
         height: 43.h,
         child: OutlineButtonWidget(
-          onPressed: () {
-            int otpValue = int.tryParse(_otpController.text.trim()) ?? 0;
-            print(widget.phoneNumber);
-            print(otpValue);
-            if (_otpController.text.length == 6) {
-              // Place the OTP verification logic here
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Please enter the complete 6-digit OTP.'),
-                  backgroundColor: AppColors.red,
-                ),
-              );
+          onPressed: () { 
+            if (formKey.currentState?.validate() == true) {
+           
+                context.push(Routes.homeScreen);
             }
           },
           text: AppString.start,
